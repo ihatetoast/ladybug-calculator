@@ -1,0 +1,6 @@
+.buttonBase {
+  width: var(--diameter);
+  height: var(--diameter);
+  border-radius: 50%;
+  background-color: var(--yellow);
+}

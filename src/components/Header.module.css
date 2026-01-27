@@ -1,0 +1,16 @@
+.header {
+  display:flex;
+  flex-direction: column;
+}
+
+.imgContainer {
+  width: 8rem;
+  height: 8rem;
+  overflow: hidden;
+  margin: 0 auto 0.5rem;
+
+}
+
+.imgContainer img {
+  width: 100%;
+}

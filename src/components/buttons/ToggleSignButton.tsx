@@ -1,16 +1,19 @@
-import React from 'react'
+import classes from './ToggleSignButton.module.css'
 
 type Props = {
-  onToggle: () => void;
-}
+  text: string;
+  onToggleClick: () => void;
+};
 
-const ToggleSignButton = ({onToggle}: Props) => {
+const ToggleSignButton = ({ text, onToggleClick }: Props) => {
   return (
-    <button aria-label="positive negative toggle" onClick={onToggle}>ToggleSignButton</button>
-  )
-}
+    <button className={classes.buttonBase} aria-label='positive negative toggle' onClick={onToggleClick}>
+      {text}
+    </button>
+  );
+};
 
-export default ToggleSignButton
+export default ToggleSignButton;
 
 /**
  * twigs? small

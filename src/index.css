@@ -1,21 +1,49 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
+  /* LADYBUG (NUMBERS) */
+  --black: #141113;
+  --red: #f44c29;
+  --gold: #db9800;
+  --white: #fafafa;
+  /* DAISY (OPERATIONS)  */
+  --yellow: #fec049;
+  --petal-front: #f5f8f7;
+  --petal-back: #d3d3d3;
+/* FROG  */
+  --bright-yellow: #f7ef02;
+  --dark-green: #283a25;
+  --green: #00ad53;
+  /* CATERPILLAR  */
+  --cater-black: #33282b;
+  --cater-yellow: #f7c938;
+  --cater-white: #f9ebe5;
+
+
+
+    --grey: #e4e1e4;
+  /* CIRCLE BUTTONS */
+  --diameter: 4rem;
 }
 
-a {
-  text-decoration: none;
-}
-a:hover {
-  color: #535bf2;
+button {
+  border: none;
 }
 
-body {
-  min-width: 320px;
-  min-height: 100vh;
+/* HEADER CHILDREN  */
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.header-content h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.header-content p {
+  font-size: 1.1rem;
+  margin: 0.25rem auto;
+  line-height: 1.1;
+}

@@ -1,4 +1,4 @@
-import React from 'react'
+import classes from './EqualButton.module.css'
 
 type Props = {
   onEqualClick: ()=> void;
@@ -6,7 +6,7 @@ type Props = {
 
 const EqualsButton = ({onEqualClick}: Props) => {
   return (
-    <button aria-label="equals" onClick={onEqualClick}>EqualsButton</button>
+    <button className={classes.buttonBase} aria-label="equals" onClick={onEqualClick}>=</button>
   )
 }
 

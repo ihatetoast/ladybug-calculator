@@ -1,4 +1,4 @@
-import React from 'react'
+import classes from './DecimalButton.module.css'
 
 type Props = {
   onDecimalClick: ()=> void;
@@ -6,7 +6,7 @@ type Props = {
 
 const DecimalButton = ({onDecimalClick}: Props) => {
   return (
-    <button aria-label="decimal point" onClick={onDecimalClick}>dot</button>
+    <button className={classes.buttonBase} aria-label="decimal point" onClick={onDecimalClick}>.</button>
   )
 }
 
@@ -14,9 +14,6 @@ export default DecimalButton
 
 
 /**
- * takes numbers before and after (until oper)
- * puts . in there. 1, 2, . , 5, 6]
- * becomes 12.56
  * simple dot. 
  * just red circle with black dot. 
  */
