@@ -2,5 +2,7 @@
   width: var(--diameter);
   height: var(--diameter);
   border-radius: 50%;
-  background-color: var(--green);
+  background-color: chartreuse;
+    position: relative;
+  justify-self: center;
 }

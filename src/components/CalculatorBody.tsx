@@ -8,6 +8,8 @@ import NumberButton from './buttons/NumberButton';
 import DecimalButton from './buttons/DecimalButton';
 import EqualsButton from './buttons/EqualsButton';
 
+import classes from './CalculatorBody.module.css';
+
 const CalculatorBody = () => {
   const [display, setDisplay] = useState<string>('0');
   // value once an operator fcn btn is clicked
@@ -62,11 +64,11 @@ const CalculatorBody = () => {
   }
 
   return (
-    <div>
-      <div>
+    <div className={classes.calcBody}>
+      <div className={classes.screen}>
         <Display runningVal={'123456789'} />
       </div>
-      <div>
+      <div className={classes.buttons}>
         <DeleteButton text='a/c' onDeleteClick={() => handleClear('a/c')} />
         <DeleteButton text='del' onDeleteClick={() => handleClear('del')} />
         <ToggleSignButton
@@ -78,8 +80,6 @@ const CalculatorBody = () => {
           ariaLabel='divide'
           onOperationClick={() => console.log('divide clicked')}
         />
-      </div>
-      <div>
         <NumberButton value={7} onNumberClick={handleNumberClick} />
         <NumberButton value={8} onNumberClick={handleNumberClick} />
         <NumberButton value={9} onNumberClick={handleNumberClick} />
@@ -88,8 +88,6 @@ const CalculatorBody = () => {
           ariaLabel='multiply'
           onOperationClick={() => console.log('multiply clicked')}
         />
-      </div>
-      <div>
         <NumberButton value={4} onNumberClick={handleNumberClick} />
         <NumberButton value={5} onNumberClick={handleNumberClick} />
         <NumberButton value={6} onNumberClick={handleNumberClick} />
@@ -98,8 +96,6 @@ const CalculatorBody = () => {
           ariaLabel='subtract'
           onOperationClick={() => console.log('subtract clicked')}
         />
-      </div>
-      <div>
         <NumberButton value={1} onNumberClick={handleNumberClick} />
         <NumberButton value={2} onNumberClick={handleNumberClick} />
         <NumberButton value={3} onNumberClick={handleNumberClick} />
@@ -108,11 +104,9 @@ const CalculatorBody = () => {
           ariaLabel='add'
           onOperationClick={() => console.log('add clicked')}
         />
-      </div>
-      <div>
         <DecimalButton onDecimalClick={handleDecimalClick} />
         <NumberButton value={0} onNumberClick={handleNumberClick} />
-        <EqualsButton onEqualClick={handleEqualClick} />
+        <EqualsButton  onEqualClick={handleEqualClick} />
       </div>
     </div>
   );

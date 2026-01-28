@@ -13,7 +13,7 @@ function App() {
       >
         <div className="header-content">
           <h1>Ladybug Calculator</h1>
-          <p>A calculator that Charley Harper would love.</p>
+          <p>A calculator à la Charley Harper.</p>
         </div>
       </Header>
       <main>

@@ -3,4 +3,6 @@
   height: var(--diameter);
   border-radius: 50%;
   background-color: var(--red);
+  position: relative;
+  justify-self: center;
 }

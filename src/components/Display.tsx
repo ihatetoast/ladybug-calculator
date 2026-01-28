@@ -1,10 +1,12 @@
+import classes from './Display.module.css'
+
 type Props = {
   runningVal: string;
 }
 
 const Display = ({runningVal}: Props) => {
   return (
-    <div className="bg-slate-200">{runningVal}</div>
+    <div className={classes.led}>{runningVal}</div>
   )
 }
 

@@ -5,4 +5,9 @@
   background-color: var(--cater-white);
 }
 
+.equal {
+  grid-column: 3 / 5;
+  justify-self: end;
+}
+
 /* https://dribbble.com/shots/1996905-C-for-Caterpillar */

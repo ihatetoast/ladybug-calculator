@@ -1,8 +1,140 @@
-
-
 .buttonBase {
   width: var(--diameter);
   height: var(--diameter);
   border-radius: 50%;
   background-color: var(--black);
+  position: relative;
+  justify-self: center;
+}
+.antennae,
+.eye,
+.shoulder,
+.leg,
+.number,
+.wing {
+  position: absolute;
+}
+/* https://www.charleyharperartstudio.com/ladybug-sampler-bookmark.html  */
+.antennae {
+  width: 20px;
+  height: 8px;
+  border-radius: 0 0 20px 20px;
+  border: 2px solid var(--black);
+  border-top: transparent;
+  top: -8px;
+  left: 16px;
+}
+
+/* EYES  */
+.eye {
+  background: var(--black);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  top: -1px;
+}
+
+.eye.leftEye {
+  left: 12px;
+}
+
+.eye.rightEye {
+  left: 39px;
+}
+
+/* YELLOW DOTS ABOVE WINGS ... SHOULDER WORKS FOR ME  */
+.shoulder {
+  background: var(--gold);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: 7px;
+}
+
+.shoulder.leftShoulder {
+  left: 10px;
+}
+
+.shoulder.rightShoulder {
+  left: 37px;
+}
+
+/* LEGS  */
+.leg {
+  border-top: 2px solid var(--black);
+  border-left: 2px solid var(--black);
+  width: 8px;
+  height: 8px;
+}
+
+.leg.leftTop {
+  transform: rotate(45deg);
+  top: 8px;
+  left: -4px;
+}
+
+.leg.rightTop {
+  transform: rotate(45deg);
+  top: 8px;
+  left: 50px;
+}
+
+.leg.leftMid {
+  top: 23px;
+  left: -6px;
+}
+
+.leg.rightMid {
+  transform: rotate(90deg);
+  top: 23px;
+  left: 52px;
+}
+.leg.leftBottom {
+  transform: rotate(-33deg);
+  top: 40px;
+  left: -3px;
+}
+
+.leg.rightBottom {
+  transform: rotate(123deg);
+  top: 40px;
+  left: 49px;
+}
+
+.number {
+  font-size: 1.2rem;
+  width: 16px;
+  height: 16px;
+  color: var(--white);
+  bottom: 5px;
+  left: calc(50% - 8px);
+}
+
+.wing {
+  background: var(--red);
+  height: 36px;
+  width: 28px;
+  top: 20px;
+}
+
+.wing.leftWing {
+    border-bottom-left-radius: 100px;
+    left: 0px;
+}
+
+.wing.rightWing {
+    border-bottom-right-radius: 100px;
+
+}
+
+.buttonBase:hover .wing.leftWing {
+transform: rotate(40deg);
+transform-origin: top center;
+transition: transform 0.2s ease-in;
+}
+
+.buttonBase:hover .wing.rightWing {
+transform: rotate(-40deg);
+transform-origin: top center;
+transition: transform 0.2s ease-in;
 }

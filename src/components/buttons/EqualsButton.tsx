@@ -6,7 +6,7 @@ type Props = {
 
 const EqualsButton = ({onEqualClick}: Props) => {
   return (
-    <button className={classes.buttonBase} aria-label="equals" onClick={onEqualClick}>=</button>
+    <button className={`${classes.buttonBase} ${classes.equal}`} aria-label="equals" onClick={onEqualClick}>=</button>
   )
 }
 

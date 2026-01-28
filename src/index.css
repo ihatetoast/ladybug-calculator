@@ -7,7 +7,7 @@
   --gold: #db9800;
   --white: #fafafa;
   /* DAISY (OPERATIONS)  */
-  --yellow: #fec049;
+  --orange: #fec049;
   --petal-front: #f5f8f7;
   --petal-back: #d3d3d3;
 /* FROG  */
@@ -23,7 +23,11 @@
 
     --grey: #e4e1e4;
   /* CIRCLE BUTTONS */
-  --diameter: 4rem;
+  --diameter: 3.5rem;
+}
+
+main {
+  min-height: 100vh;
 }
 
 button {
@@ -34,7 +38,6 @@ button {
 .header-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .header-content h1 {
@@ -43,7 +46,7 @@ button {
 }
 
 .header-content p {
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin: 0.25rem auto;
   line-height: 1.1;
 }
