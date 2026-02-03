@@ -1,6 +1,6 @@
 .calcBody {
   display: flex;
-    border-radius: 5px;
+  border-radius: 5px;
   flex-direction: column;
   gap: 0.5rem;
   border: 1px solid blue;
@@ -15,6 +15,11 @@
   background: var(--grey);
   padding: 0.5rem 0.2rem;
   border-radius: 5px;
+  height: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 .buttons {
   display: grid;
@@ -23,5 +28,3 @@
   gap: 0.5rem;
   border: 1px solid green;
 }
-
-

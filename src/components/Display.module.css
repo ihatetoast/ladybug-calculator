@@ -3,3 +3,9 @@
   font-size: 2rem;
   line-height: 1;
 }
+
+.ledSmall {
+  text-align: right;
+  font-size: 1.2rem;
+  line-height: 1;
+}

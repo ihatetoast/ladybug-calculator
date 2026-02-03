@@ -12,26 +12,57 @@ import classes from './CalculatorBody.module.css';
 
 const CalculatorBody = () => {
   const [display, setDisplay] = useState<string>('0');
-  // value once an operator fcn btn is clicked
-  const [previousValue, setPreviousValue] = useState<string | null>(null);
-  // building number
-  const [currentValue, setCurrentValue] = useState<string | null>(null);
+  const [expression, setExpression] = useState<(number | string)[]>([]);
+  const [currentValue, setCurrentValue] = useState<string>('0');
+  const [calculatedAns, setCalculatedAns] = useState<number | null>(null);
+  const [isEvaluated, setIsEvaluated] = useState<boolean>(false);
 
   function handleClear(type: string) {
     if (type === 'del') {
-      console.log('del clicked');
+      setCurrentValue(prev =>  prev.slice(0,-1));
+      setDisplay(prev =>  {
+        if(prev.length === 1) setDisplay('0');
+        return prev.slice(0,-1)}
+      );
     }
 
     if (type === 'a/c') {
-      console.log('all clear clicked');
       setDisplay('0');
-      setPreviousValue('0');
       setCurrentValue('0');
+      setCalculatedAns(0)
+      setExpression([]);
+      setIsEvaluated(false);
     }
   }
 
+
+  // on smartphone. if the expression was evaluated, the number clicked starts everything over. 
+  // create a clear all function so i can use it here and for a/c.
+
+
+
   function handleNumberClick(val: number) {
-    console.log('val clicked: ', val);
+    const valStr = val.toString();
+    if (display === '0') {
+      setDisplay(valStr);
+      setCurrentValue(valStr);
+    } else {
+      setDisplay((prev) => prev.concat(valStr));
+      setCurrentValue((prev) => prev.concat(valStr));
+    }
+  }
+
+  // on smartphone. if expression is evaluated, 
+  // clicking an operator button clears history or the displayed expression but not the answer.
+  // the previous answer becomes the first entry to the expression array. 
+  function handleOperatorClick(operation: string) {
+    // add to the display
+    setDisplay((prev) => prev.concat(operation));
+
+    // move current value to the expression array
+    // add operator to expressions array
+    setExpression((prev) => [...prev, parseInt(currentValue), operation]);
+    setCurrentValue('');
   }
 
   function handleDecimalClick() {
@@ -51,7 +82,7 @@ const CalculatorBody = () => {
       case 'x':
         return num1 * num2;
       case '÷':
-        if (num2 === 0) return 'E';
+        if (num2 === 0) return 'Error';
         return num1 / num2;
       default:
         return num2;
@@ -59,26 +90,50 @@ const CalculatorBody = () => {
   }
 
   function handleEqualClick() {
-    console.log('equal clicked');
-    calculate(2, 3, '+');
+    const expressionToEvaluate = [...expression, Number(currentValue)];
+    setExpression((prev) => [...prev, parseInt(currentValue)]);
+    if (expressionToEvaluate.length < 3) return;
+    
+    if (
+      expressionToEvaluate.length === 3 &&
+      typeof expressionToEvaluate[0] === 'number' &&
+      typeof expressionToEvaluate[1] === 'string' &&
+      typeof expressionToEvaluate[2] === 'number'
+    ) {
+      const result = calculate(expressionToEvaluate[0], expressionToEvaluate[2], expressionToEvaluate[1]);
+      if (typeof result === 'number') {
+        setCalculatedAns(result);
+        setDisplay(expressionToEvaluate.join(' '));
+      } else {
+        // if div by 0, error string appears
+        setDisplay(result);
+      }
+      setIsEvaluated(true);
+    }
   }
 
+  function handleToggleClick(){
+    console.log("toggle toggled");
+    // takes string number and turns to negative string. "23" to "-23" and 
+    // immediately moves current to eval
+    // display/UI will show "(-23)"
+  }
   return (
     <div className={classes.calcBody}>
       <div className={classes.screen}>
-        <Display runningVal={'123456789'} />
+        <Display runningVal={display} answer={calculatedAns} />
       </div>
       <div className={classes.buttons}>
         <DeleteButton text='a/c' onDeleteClick={() => handleClear('a/c')} />
         <DeleteButton text='del' onDeleteClick={() => handleClear('del')} />
         <ToggleSignButton
           text='+/-'
-          onToggleClick={() => console.log('toggle sign clicked')}
+          onToggleClick={handleToggleClick}
         />
         <OperatorButton
           value='÷'
           ariaLabel='divide'
-          onOperationClick={() => console.log('divide clicked')}
+          onOperationClick={handleOperatorClick}
         />
         <NumberButton value={7} onNumberClick={handleNumberClick} />
         <NumberButton value={8} onNumberClick={handleNumberClick} />
@@ -86,7 +141,7 @@ const CalculatorBody = () => {
         <OperatorButton
           value='x'
           ariaLabel='multiply'
-          onOperationClick={() => console.log('multiply clicked')}
+          onOperationClick={handleOperatorClick}
         />
         <NumberButton value={4} onNumberClick={handleNumberClick} />
         <NumberButton value={5} onNumberClick={handleNumberClick} />
@@ -94,7 +149,7 @@ const CalculatorBody = () => {
         <OperatorButton
           value='-'
           ariaLabel='subtract'
-          onOperationClick={() => console.log('subtract clicked')}
+          onOperationClick={handleOperatorClick}
         />
         <NumberButton value={1} onNumberClick={handleNumberClick} />
         <NumberButton value={2} onNumberClick={handleNumberClick} />
@@ -102,11 +157,11 @@ const CalculatorBody = () => {
         <OperatorButton
           value='+'
           ariaLabel='add'
-          onOperationClick={() => console.log('add clicked')}
+          onOperationClick={handleOperatorClick}
         />
         <DecimalButton onDecimalClick={handleDecimalClick} />
         <NumberButton value={0} onNumberClick={handleNumberClick} />
-        <EqualsButton  onEqualClick={handleEqualClick} />
+        <EqualsButton onEqualClick={handleEqualClick} />
       </div>
     </div>
   );

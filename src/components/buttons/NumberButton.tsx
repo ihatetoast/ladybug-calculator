@@ -5,11 +5,11 @@ type Props = {
 };
 
 const NumberButton = ({ value, onNumberClick }: Props) => {
-  const right = Math.floor(value / 2);
-  const left = value % 2 === 0 ? Math.floor(value / 2) : Math.ceil(value / 2);
+  // const right = Math.floor(value / 2);
+  // const left = value % 2 === 0 ? right : right + 1;
 
-  console.log(value);
-  console.log(right, left);
+  // console.log(value);
+  // console.log(right, left);
 
   return (
     <button
