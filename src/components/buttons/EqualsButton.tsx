@@ -1,19 +1,53 @@
-import classes from './EqualButton.module.css'
+import classes from './EqualButton.module.css';
 
 type Props = {
-  onEqualClick: ()=> void;
-}
+  onEqualClick: () => void;
+};
 
-const EqualsButton = ({onEqualClick}: Props) => {
+const EqualsButton = ({ onEqualClick }: Props) => {
   return (
-    <button className={`${classes.buttonBase} ${classes.equal}`} aria-label="equals" onClick={onEqualClick}>=</button>
-  )
-}
+    <button
+      className={`${classes.buttonBase} ${classes.equal}`}
+      aria-label='equals'
+      onClick={onEqualClick}
+    >
+      <div className={classes.stripes}>
+        
+        <span className={classes.end}></span>
+        <span className={classes.white}></span>
+        <span className={classes.black}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.white}></span>
+        <span className={classes.green}></span>
+        <span className={classes.white}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.black}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.white}></span>
+        <span className={classes.green}></span>
+        <span className={classes.white}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.black}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.white}></span>
+        <span className={classes.green}></span>
+        <span className={classes.white}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.black}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.white}></span>
+        <span className={classes.green}></span>
+        <span className={classes.white}></span>
+        <span className={classes.yellow}></span>
+        <span className={classes.black}></span>
+        <span className={classes.white}></span>
+        <span className={classes.end}></span>
 
-export default EqualsButton
+        <span className={`${classes.sign} ${classes.top}`}></span>
+        <span className={`${classes.sign} ${classes.bottom}`}></span>
+      </div>
+    </button>
+  );
+};
 
-/**
- * has only one job, but is still its own button bc 
- * it will have its own style
- * two twigs?
- */
+export default EqualsButton;

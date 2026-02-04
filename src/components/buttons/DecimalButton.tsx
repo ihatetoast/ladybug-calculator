@@ -6,7 +6,10 @@ type Props = {
 
 const DecimalButton = ({onDecimalClick}: Props) => {
   return (
-    <button className={classes.buttonBase} aria-label="decimal point" onClick={onDecimalClick}>.</button>
+    <button className={classes.buttonBase} aria-label="decimal point" onClick={onDecimalClick}>
+      <span className={classes.inner}></span>
+      <span className={classes.decimal}></span>
+    </button>
   )
 }
 

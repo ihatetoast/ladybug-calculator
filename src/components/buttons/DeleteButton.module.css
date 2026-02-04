@@ -2,7 +2,8 @@
   width: var(--diameter);
   height: var(--diameter);
   border-radius: 50%;
-  background-color: chartreuse;
-    position: relative;
+  background-color: var(--black);
+  color: var(--white);
+  position: relative;
   justify-self: center;
 }

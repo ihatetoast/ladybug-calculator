@@ -2,7 +2,132 @@
   width: var(--diameter);
   height: var(--diameter);
   border-radius: 50%;
-  background-color: var(--orange);
-    position: relative;
+  background-color: green;
+  position: relative;
   justify-self: center;
+}
+.bgPetals {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bgPetal,
+.signPetal {
+  display: inline-flex;
+  position: absolute;
+  width: 34px;
+  height: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  transform-origin: left center;
+}
+
+.bgPetal {
+  background-color: var(--petal-back);
+  transform: translate(-0%, -50%) rotate(22.5deg);
+}
+
+.signPetal {
+  background-color: var(--petal-front);
+  transform: translate(-0%, -50%) rotate(0deg);
+}
+
+.bgPetal:nth-of-type(1) {
+  transform: translate(-0%, -50%) rotate(22.5deg);
+}
+.bgPetal:nth-of-type(2) {
+  transform: translate(-0%, -50%) rotate(67.5deg);
+}
+.bgPetal:nth-of-type(3) {
+  transform: translate(-0%, -50%) rotate(112.5deg);
+}
+.bgPetal:nth-of-type(4) {
+  transform: translate(-0%, -50%) rotate(157.5deg);
+}
+.bgPetal:nth-of-type(5) {
+  transform: translate(-0%, -50%) rotate(202.5deg);
+}
+.bgPetal:nth-of-type(6) {
+  transform: translate(-0%, -50%) rotate(247.5deg);
+}
+.bgPetal:nth-of-type(7) {
+  transform: translate(-0%, -50%) rotate(292.5deg);
+}
+.bgPetal:nth-of-type(8) {
+  transform: translate(-0%, -50%) rotate(337.5deg);
+}
+
+.signPetal:nth-of-type(1) {
+  transform: translate(-0%, -50%) rotate(0deg);
+}
+.signPetal:nth-of-type(2) {
+  transform: translate(-0%, -50%) rotate(45deg);
+}
+.signPetal:nth-of-type(3) {
+  transform: translate(-0%, -50%) rotate(90deg);
+}
+.signPetal:nth-of-type(4) {
+  transform: translate(-0%, -50%) rotate(135deg);
+}
+.signPetal:nth-of-type(5) {
+  transform: translate(-0%, -50%) rotate(180deg);
+}
+.signPetal:nth-of-type(6) {
+  transform: translate(-0%, -50%) rotate(225deg);
+}
+.signPetal:nth-of-type(7) {
+  transform: translate(-0%, -50%) rotate(270deg);
+}
+.signPetal:nth-of-type(8) {
+  transform: translate(-0%, -50%) rotate(315deg);
+}
+
+.signPetal.active {
+  z-index: 1;
+}
+
+.disk {
+  display: inline-flex;
+  justify-content: center;
+  color: var(--black);
+  font-size: 24px;
+  position: absolute;
+  align-items: center;
+  background-color: var(--disc);
+  width: calc(var(--diameter) * 0.5);
+  height: calc(var(--diameter) * 0.5);
+  border-radius: 50%;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.divDot {
+  /* background-color: var(--petal-active); */
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  top: 50%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+}
+
+.buttonBase:hover .signPetal.active {
+  background-color: var(--petal-active);
+}
+
+.buttonBase:hover .signPetal.active .divDot {
+  background-color: var(--petal-active);
+}
+
+.buttonBase:hover .signPetals .divDot {
+  background-color: var(--petal-active);
 }

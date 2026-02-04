@@ -7,10 +7,12 @@
   --gold: #db9800;
   --white: #fafafa;
   /* DAISY (OPERATIONS)  */
-  --orange: #fec049;
-  --petal-front: #f5f8f7;
-  --petal-back: #d3d3d3;
-/* FROG  */
+  --disc: #fec049;
+  --petal-front: #cb5ca2;
+  --petal-back: #ef9cd5;
+  --petal-active: #890a5b;
+
+  /* FROG  */
   --bright-yellow: #f7ef02;
   --dark-green: #283a25;
   --green: #00ad53;
@@ -19,9 +21,8 @@
   --cater-yellow: #f7c938;
   --cater-white: #f9ebe5;
 
+  --grey: #e4e1e4;
 
-
-    --grey: #e4e1e4;
   /* CIRCLE BUTTONS */
   --diameter: 3.5rem;
 }
@@ -32,6 +33,9 @@ main {
 
 button {
   border: none;
+}
+button:hover {
+  cursor: pointer;
 }
 
 /* HEADER CHILDREN  */
