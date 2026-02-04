@@ -1,9 +1,60 @@
 .buttonBase {
-  width: var(--diameter);
-  height: var(--diameter);
+  width: calc(var(--diameter) - 10px);
+  height: calc(var(--diameter) - 10px);
   border-radius: 50%;
-  background-color: var(--black);
   color: var(--white);
-  position:relative;
+  position: relative;
   justify-self: center;
+  transform: rotate(-45deg);
+}
+
+.buttonSemi {
+  position: absolute;
+  width: 100%;
+  left: 0px;
+}
+
+.buttonSemi.black {
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  background-color: var(--black);
+  border-bottom: 2px solid var(--white);
+  top: 0px;
+  left: 0px;
+  height: calc(50% - 1px);
+}
+
+.buttonSemi.red {
+  transform-origin: top;
+  bottom: 0px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  background-color: var(--red);
+  border-top: 2px solid var(--white);
+  height: calc(50% - 1px);
+}
+
+.signs {
+  position: absolute;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.signs.pos {
+  left: 35%;
+  top: -5%;
+    transform: rotate(45deg);
+}
+.signs.neg {
+  left: 35%;
+  top: -5%;
+    transform: rotate(45deg);
+}
+
+.buttonBase:hover .buttonSemi.red {
+    background-color: var(--black);
+}
+
+.buttonBase:hover .buttonSemi.black {
+    background-color: var(--red);
 }

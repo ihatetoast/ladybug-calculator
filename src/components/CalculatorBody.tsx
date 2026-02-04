@@ -251,7 +251,7 @@ const CalculatorBody = () => {
       <div className={classes.buttons}>
         <DeleteButton text='a/c' onDeleteClick={() => handleClear('a/c')} />
         <DeleteButton text='del' onDeleteClick={() => handleClear('del')} />
-        <ToggleSignButton text='+/-' onToggleClick={handleToggleClick} />
+        <ToggleSignButton  onToggleClick={handleToggleClick} />
         <OperatorButton
           value='÷'
           ariaLabel='divide'

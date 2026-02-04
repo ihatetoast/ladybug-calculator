@@ -4,7 +4,6 @@
   border-radius: var(--diameter);
   background-color: var(--cater-black);
   padding: 0;
-
 }
 
 .equal {
@@ -16,12 +15,17 @@
 .stripes {
   display: flex;
   width: 100%;
+  height: 100%;
   position: relative;
 }
-.end, .black {
+.end,
+.black {
   background-color: var(--cater-black);
 }
-.end, .white, .yellow, .green {
+.end,
+.white,
+.yellow,
+.green {
   flex: 1;
 }
 .black {
@@ -45,16 +49,37 @@
 .sign {
   position: absolute;
   background-color: var(--black);
+  border: 2px solid var(--cater-black);
   width: 30%;
-  height: 10%;
+  height: 8%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 .sign.top {
- top: 40%;
-
+  top: 40%;
 }
 
 .sign.bottom {
-top: 65%;
+  top: 65%;
+}
+
+
+.buttonBase:hover .black{
+background-color: var(--cater-white);
+}
+
+.buttonBase:hover .white {
+  background-color: var(--cater-black);
+}
+.buttonBase:hover .green {
+ background-color: var(--cater-yellow);
+}
+
+.buttonBase:hover .yellow {
+    background-color: var(--green);
+}
+
+.buttonBase:hover .sign {
+    background-color: var(--cater-white);
+    
 }

@@ -1,9 +1,140 @@
+:root {
+  --bg-color: #fff;
+  --line-color-1: #366;
+  --line-color-2: #a9a9a9;
+  --bug-guts-bronze-yellow: #737000;
+  --bug-guts-olive-green: #708238;
+}
+
 .buttonBase {
-  width: var(--diameter);
-  height: var(--diameter);
-  border-radius: 50%;
-  background-color: var(--black);
-  color: var(--white);
+  width: calc(var(--diameter) - 10px);
+  height: calc(var(--diameter) - 10px);
+  border-radius: 10px;
+  border: 2px solid var(--black);
+  background-color: var(--grey);
+  color: var(--black);
   position: relative;
   justify-self: center;
+  padding: 0;
+}
+
+.swatterGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  background-color: var(--bg-color);
+  background-image:
+    conic-gradient(
+      at calc(100% - 2px) calc(100% - 2px),
+      var(--line-color-1) 270deg,
+      #0000 0
+    ),
+    conic-gradient(
+      at calc(100% - 1px) calc(100% - 1px),
+      var(--line-color-2) 270deg,
+      #0000 0
+    );
+  background-size:
+    calc(var(--diameter) - 10px) calc(var(--diameter) - 10px),
+    2px 2px;
+  z-index: 5;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swatterHandle {
+  position: absolute;
+  height: 73%;
+  width: 73%;
+  transform: rotate(45deg);
+  top: 10%;
+  left: 50%;
+  border-radius: 10px;
+  border: 2px solid var(--black);
+  background-color: #c8c6c8;
+}
+
+.swatterText {
+  position: relative;
+  z-index: 10;
+  font-size: 1.2rem;
+}
+
+.bugGuts {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 6;
+  display: none;
+}
+
+.buttonBase:hover .bugGuts {
+  display: block;
+}
+
+.goop {
+  display: inline-flex;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--bug-guts-olive-green);
+}
+
+.goop:nth-of-type(1) {
+  top: 20%;
+  left: 19%;
+  background-color: var(--gold);
+  opacity: 0.7;
+}
+.goop:nth-of-type(2) {
+  top: 54%;
+  left: 29%;
+  background-color: var(--bug-guts-bronze-yellow);
+  opacity: 0.8;
+}
+.goop:nth-of-type(3) {
+  top: 39%;
+  left: 39%;
+  background-color: var(--gold);
+  opacity: 0.7;
+}
+.goop:nth-of-type(4) {
+  top: 33%;
+  left: 49%;
+  opacity: 0.6;
+}
+.goop:nth-of-type(5) {
+  top: 61%;
+  left: 50%;
+  background-color: var(--gold);
+  opacity: 0.7;
+}
+.goop:nth-of-type(6) {
+  top: 14%;
+  left: 9%;
+  background-color: var(--bug-guts-bronze-yellow);
+  opacity: 0.8;
+}
+.goop:nth-of-type(7) {
+  top: 49%;
+  left: 32%;
+  opacity: 0.6;
+}
+.goop:nth-of-type(8) {
+  top: 33%;
+  left: 49%;
+  opacity: 0.6;
+}
+.goop:nth-of-type(9) {
+  top: 13%;
+  left: 53%;
+  background-color: var(--bug-guts-bronze-yellow);
+  opacity: 0.8;
 }

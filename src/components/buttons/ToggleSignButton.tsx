@@ -1,21 +1,27 @@
-import classes from './ToggleSignButton.module.css'
+import classes from './ToggleSignButton.module.css';
 
 type Props = {
-  text: string;
   onToggleClick: () => void;
 };
 
-const ToggleSignButton = ({ text, onToggleClick }: Props) => {
+const ToggleSignButton = ({ onToggleClick }: Props) => {
+  const dash = "\u2013";
   return (
-    <button className={classes.buttonBase} aria-label='positive negative toggle' onClick={onToggleClick}>
-      {text}
+    <button
+      className={classes.buttonBase}
+      aria-label='positive negative toggle'
+      onClick={onToggleClick}
+    >
+      <div className={`${classes.buttonSemi} ${classes.black}`}>
+        <span className={`${classes.signs} ${classes.pos}`}>+</span>
+      </div>
+
+      <div className={`${classes.buttonSemi} ${classes.red}`}>
+        <span className={`${classes.signs} ${classes.neg}`}>{dash}</span>
+      </div>
     </button>
   );
 };
 
 export default ToggleSignButton;
 
-/**
- * twigs? small
- * keep itsimple. it's charley harper
- */
