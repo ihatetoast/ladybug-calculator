@@ -10,37 +10,67 @@ import EqualsButton from './buttons/EqualsButton';
 
 import classes from './CalculatorBody.module.css';
 
+const OPERATORS = ['+', '-', 'x', '÷', '/', '*'];
+const VALID_KEYS = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '+',
+  '-',
+  '*',
+  'x',
+  '/',
+  '.',
+  'Enter',
+  'Backspace',
+  'Escape',
+];
+
 const CalculatorBody = () => {
   const [display, setDisplay] = useState<string>('0');
   const [expression, setExpression] = useState<(number | string)[]>([]);
   const [currentValue, setCurrentValue] = useState<string>('0');
   const [calculatedAns, setCalculatedAns] = useState<number | null>(null);
-  const [isEvaluated, setIsEvaluated] = useState<boolean>(false);
+
+  // deriv from calculatedAns state
+  const isEvaluated = calculatedAns !== null;
 
   function handleClear(type: string) {
+    // if display is 0 and expression is empty. return.
+
+    // bug to fix: if the answer is negative, array is nan because of -
+    // ? note if neg. slice on the Math.abs and if neg, make neg again.
     if (type === 'del') {
-      setCurrentValue(prev =>  prev.slice(0,-1));
-      setDisplay(prev =>  {
-        if(prev.length === 1) setDisplay('0');
-        return prev.slice(0,-1)}
-      );
+      if (!isEvaluated) {
+        console.log('deleting an unevaluated expression');
+      } else {
+        console.log(
+          'deleting history and one digit at a time of the eval answer',
+        );
+      }
     }
 
     if (type === 'a/c') {
       setDisplay('0');
       setCurrentValue('0');
-      setCalculatedAns(0)
+      setCalculatedAns(null);
       setExpression([]);
-      setIsEvaluated(false);
     }
   }
 
-
-  // on smartphone. if the expression was evaluated, the number clicked starts everything over. 
-  // create a clear all function so i can use it here and for a/c.
-
-
-
+  /**
+   * BUG: if expression is evaluated, number starts over. 
+   * 
+   * need to handle that. check iseval
+   * 
+   */
   function handleNumberClick(val: number) {
     const valStr = val.toString();
     if (display === '0') {
@@ -52,21 +82,51 @@ const CalculatorBody = () => {
     }
   }
 
-  // on smartphone. if expression is evaluated, 
-  // clicking an operator button clears history or the displayed expression but not the answer.
-  // the previous answer becomes the first entry to the expression array. 
-  function handleOperatorClick(operation: string) {
-    // add to the display
-    setDisplay((prev) => prev.concat(operation));
-
-    // move current value to the expression array
-    // add operator to expressions array
-    setExpression((prev) => [...prev, parseInt(currentValue), operation]);
-    setCurrentValue('');
-  }
-
+  /**
+   * todo: implement after bugs and before del
+   */
   function handleDecimalClick() {
     console.log('decimal clicked');
+    // console.log("currentValue ", currentValue);
+    // const numberDec = currentValue.concat('.');
+    // console.log("decimal ", numberDec[numberDec.length-1]);
+
+    // setDisplay((prev) => prev.concat('.'));
+    // setCurrentValue(numberDec);
+  }
+
+
+  /**
+   * BUG: after evaluated, if user presses a number
+   * a new expression start with answer as first expression.
+   * test 2 + 5 = 
+   * 7
+   * x 10 =
+   *  70. if 70, we're good. 
+   * if 52, it's doing 2 + 5 x 10
+   * 
+   */
+  function handleOperatorClick(operation: string) {
+    // bug: if user already typed + and then types x, just swap. currently it adds the oper like 8+x
+    // add to the display
+    if (typeof expression[expression.length - 1] === 'string') {
+      setDisplay((prev) => {
+        const newStr = prev.slice(0, -1) + operation;
+        return newStr;
+      });
+
+      const newExp = [...expression];
+      newExp.splice(-1, 1, operation);
+      setExpression(newExp);
+    } else {
+      setDisplay((prev) => {
+        return prev.concat(operation);
+      });
+
+      setExpression((prev) => [...prev, parseInt(currentValue), operation]);
+    }
+
+    setCurrentValue('');
   }
 
   function calculate(
@@ -91,33 +151,98 @@ const CalculatorBody = () => {
 
   function handleEqualClick() {
     const expressionToEvaluate = [...expression, Number(currentValue)];
+    console.log('expressionToEvaluate ', expressionToEvaluate);
     setExpression((prev) => [...prev, parseInt(currentValue)]);
+    // not enough to evaluate:
     if (expressionToEvaluate.length < 3) return;
-    
-    if (
-      expressionToEvaluate.length === 3 &&
-      typeof expressionToEvaluate[0] === 'number' &&
-      typeof expressionToEvaluate[1] === 'string' &&
-      typeof expressionToEvaluate[2] === 'number'
-    ) {
-      const result = calculate(expressionToEvaluate[0], expressionToEvaluate[2], expressionToEvaluate[1]);
-      if (typeof result === 'number') {
-        setCalculatedAns(result);
-        setDisplay(expressionToEvaluate.join(' '));
+    // otherwise...
+    const tempArr: (number | string)[] = [];
+    // get m and d first. push product or quotient to temp arr.
+    for (let i = 0; i < expressionToEvaluate.length; i++) {
+      if (expressionToEvaluate[i] === 'x') {
+        const multiplier = tempArr.pop(); // get last one pushed before x
+        const multiplicand = expressionToEvaluate[++i];
+        const product = calculate(
+          multiplier as number,
+          multiplicand as number,
+          'x',
+        );
+        tempArr.push(product);
+      } else if (expressionToEvaluate[i] === '÷') {
+        const dividend = tempArr.pop();
+        const divisor = expressionToEvaluate[++i];
+        const quotient = calculate(dividend as number, divisor as number, '÷');
+        tempArr.push(quotient);
       } else {
-        // if div by 0, error string appears
-        setDisplay(result);
+        tempArr.push(expressionToEvaluate[i]);
       }
-      setIsEvaluated(true);
+    }
+    // now temp arr has only + - left plus the product and quotient
+
+    // start with first elem in arr which is a number (eg [1, "+", 34, "-", ...])
+    let result = tempArr[0] as number;
+
+    // start loop at second elem (idx 1), ...
+    for (let i = 1; i < tempArr.length; i += 2) {
+      // which will be an operator + or -
+      const operator = tempArr[i] as string;
+      // and hte one after that is another number
+      const nextNum = tempArr[i + 1] as number;
+      // and i += 2 skips to next oper
+      if (operator === '+') result += nextNum;
+      if (operator === '-') result -= nextNum;
+    }
+
+    if (typeof result === 'number') {
+      setCalculatedAns(result);
+      setDisplay(expressionToEvaluate.join(' '));
+    } else {
+      // if div by 0, error string appears
+      setDisplay(result);
     }
   }
 
-  function handleToggleClick(){
-    console.log("toggle toggled");
-    // takes string number and turns to negative string. "23" to "-23" and 
-    // immediately moves current to eval
-    // display/UI will show "(-23)"
+  // todo: allow user to use keyboard:
+  //
+  /**
+   * useeffect(() =>{
+   * const handleKeyPress = (e) => {
+   *  const key = e.key;
+   *   if validKeys includes key, handleKeyClick(key)
+   *  make sure * and 'x' or "X to lower case" are considered for mult.
+   *  ignore ÷. no one knows that
+   *  note on ui that this is a basic calc, so doesn't include ( or )
+   * }
+   *
+   * window.addEventListener('keydown', handleKeyPress);
+   *  and clean up with
+   *  return () => {
+   *   window.removeEventListener('keydown', handleKeyPress);
+   * }
+   *
+   * }, [])
+   *
+   */
+
+
+
+  /**
+   * BUG 1: doesn't move toggled to expression yet. move it and clear current
+   * 
+   *  BUG 2: on smartphone someting like 3 toggle 4 looks like
+   * (-3)x5
+   *  so handle implicit mult
+   */
+  function handleToggleClick() {
+    if (currentValue === '0') {
+      return;
+    }
+    const currNumber = Number(currentValue);
+    const toggled = (currNumber * -1).toString();
+    setCurrentValue(toggled);
+    setDisplay(toggled);
   }
+
   return (
     <div className={classes.calcBody}>
       <div className={classes.screen}>
@@ -126,10 +251,7 @@ const CalculatorBody = () => {
       <div className={classes.buttons}>
         <DeleteButton text='a/c' onDeleteClick={() => handleClear('a/c')} />
         <DeleteButton text='del' onDeleteClick={() => handleClear('del')} />
-        <ToggleSignButton
-          text='+/-'
-          onToggleClick={handleToggleClick}
-        />
+        <ToggleSignButton text='+/-' onToggleClick={handleToggleClick} />
         <OperatorButton
           value='÷'
           ariaLabel='divide'
