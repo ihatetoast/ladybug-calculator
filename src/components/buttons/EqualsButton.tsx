@@ -3,7 +3,9 @@ import classes from './EqualButton.module.css';
 type Props = {
   onEqualClick: () => void;
 };
-
+// todo: after colored pencil doodling, redo the span. 
+// let the spans be y or g depending on nth-of-type odd/even, then let teh black or white come from border colors. y gets b, g gets white borders. OR let left right. play. 
+// but just do 12-18 from an array and let nth-of-type odd even every 3rd etc det color
 const EqualsButton = ({ onEqualClick }: Props) => {
   return (
     <button

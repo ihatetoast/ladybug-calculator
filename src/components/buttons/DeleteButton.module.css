@@ -62,7 +62,7 @@
 .swatterText {
   position: relative;
   z-index: 10;
-  font-size: 1.2rem;
+  font-size: 1.2rem; 
 }
 
 .bugGuts {
