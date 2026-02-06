@@ -8,8 +8,8 @@ import NumberButton from './buttons/NumberButton';
 import DecimalButton from './buttons/DecimalButton';
 import EqualsButton from './buttons/EqualsButton';
 
-import { calculate, evalExpression } from '../helpers/utils.ts';
-
+import { calculate, evalExpression, hasDecimal } from '../helpers/utils.ts';
+import { OPERATORS } from '../helpers/variables.ts';
 import classes from './CalculatorBody.module.css';
 
 const CalculatorBody = () => {
@@ -21,8 +21,7 @@ const CalculatorBody = () => {
   // for double clicking = sign:
   const [lastOperand, setLastOperand] = useState<number | null>(null);
   const [lastOperation, setLastOperation] = useState<string | null>(null);
-
-  // todo: add isError state to manage. only AC works if there's an error (div by 0 )
+  const [isError, setIsError] = useState<boolean>(false);
 
   // deriv from calculatedAns state
   const isEvaluated = calculatedAns !== null;
@@ -30,25 +29,21 @@ const CalculatorBody = () => {
   function handleClear(type: string) {
     // if display is 0 and expression is empty. return.
 
-    // bug to fix: if the answer is negative, array is nan because of -
-    // ? note if neg. slice on the Math.abs and if neg, make neg again.
-    if (type === 'del') {
-      if (!isEvaluated) {
-        console.log('deleting an unevaluated expression, one char at a time');
-      } else {
-        console.log(
-          'clear history and del one digit at a time of the eval answer',
-        );
+      if (type === 'del') {
+        if (isError)return;
+        // bug to fix: if the answer is negative, array is nan because of -
+        // ? note if neg. slice on the Math.abs and if neg, make neg again.
+        if (!isEvaluated) {
+          console.log('deleting an unevaluated expression, one char at a time');
+        } else {
+          console.log(
+            'clear history and del one digit at a time of the eval answer',
+          );
+        }
       }
-    }
 
     if (type === 'a/c') {
-      setDisplay('0');
-      setCurrentValue('0');
-      setCalculatedAns(null);
-      setExpression([]);
-      setLastOperand(null);
-      setLastOperation(null);
+      clearAll();
     }
   }
 
@@ -56,12 +51,9 @@ const CalculatorBody = () => {
     const valStr = val.toString();
     // if exp is eval, start anew.
     if (isEvaluated) {
-      setExpression([]);
-      setCalculatedAns(null);
+      clearAll();
       setDisplay(valStr);
       setCurrentValue(valStr);
-      setLastOperation(null);
-      setLastOperand(null);
       return;
     }
     if (display === '0') {
@@ -74,9 +66,19 @@ const CalculatorBody = () => {
   }
 
   function handleDecimalClick() {
-    console.log('currentValue ', currentValue);
-
-    setDisplay((prev) => prev.concat('.'));
+    if (hasDecimal(currentValue)) {
+      return;
+    }
+    if (isEvaluated) {
+      clearAll();
+    }
+    // add 0 before . if previous click was operator: so 4+. becomes 4+0.
+    const last = display.slice(0 - 1);
+    if (OPERATORS.includes(last)) {
+      setDisplay((prev) => prev.concat('0.'));
+    } else {
+      setDisplay((prev) => prev.concat('.'));
+    }
     setCurrentValue((prev) => prev.concat('.'));
   }
 
@@ -89,7 +91,16 @@ const CalculatorBody = () => {
       setCalculatedAns(null);
       return;
     }
-    if (typeof expression[expression.length - 1] === 'string') {
+
+    // if 6. + convert to 6.0 + in display
+    const lastChar = display.slice(0 - 1);
+    if (lastChar === '.') {
+      setDisplay((prev) => prev.concat('0'));
+    }
+
+    // if current value is empty (not holding a number) and the epxression elem is a string aka oper
+    if (currentValue === '' &&typeof expression[expression.length - 1] === 'string' ) {
+      console.log(expression[expression.length - 1]);
       setDisplay((prev) => {
         const newStr = prev.slice(0, -1) + operation;
         return newStr;
@@ -108,7 +119,7 @@ const CalculatorBody = () => {
 
     setCurrentValue('');
   }
-
+  // katy 
   function handleEqualClick() {
     // CASE 1:  clicking = again after eval (= = = ...)
     if (
@@ -127,12 +138,14 @@ const CalculatorBody = () => {
     // CASE 2b: if no number after last operation, just add 0
     const expToEval = [...expression, Number(currentValue)];
     if (expToEval.length < 3) return; // not enough to eval
+
     setExpression((prev) => [...prev, Number(currentValue)]);
 
     const result = evalExpression(expToEval);
     if (typeof result === 'string') {
       // todo: needs to show bad equation above error msg
-      setDisplay(result);
+      setDisplay(expToEval.join(' '));
+      setIsError(true);
       return;
     }
 
@@ -144,6 +157,7 @@ const CalculatorBody = () => {
     setLastOperation(lastOp);
     setCalculatedAns(result);
     setDisplay(expToEval.join(' '));
+    setCurrentValue(result.toString());
   }
 
   // todo: allow user to use keyboard:
@@ -186,10 +200,19 @@ const CalculatorBody = () => {
     }
   }
 
+  function clearAll(): void {
+    setDisplay('0');
+    setCurrentValue('0');
+    setCalculatedAns(null);
+    setExpression([]);
+    setLastOperand(null);
+    setLastOperation(null);
+    setIsError(false);
+  }
   return (
     <div className={classes.calcBody}>
       <div className={classes.screen}>
-        <Display runningVal={display} answer={calculatedAns} />
+        <Display runningVal={display} answer={calculatedAns} showError={isError}/>
       </div>
       <div className={classes.buttons}>
         <DeleteButton text='a/c' onDeleteClick={() => handleClear('a/c')} />

@@ -5,11 +5,15 @@ type Props = {
 };
 
 const NumberButton = ({ value, onNumberClick }: Props) => {
-  // const right = Math.floor(value / 2);
-  // const left = value % 2 === 0 ? right : right + 1;
-
-  // console.log(value);
-  // console.log(right, left);
+  const right = Math.floor(value / 2);
+  const left = value - right;
+  // i for key because there will never be change to this and react can mind its own bidniss
+  const leftDots = [...Array(left).keys()].map((_, i) => (
+    <span key={i} className={classes.wingDot} />
+  ));
+  const rightDots = [...Array(right).keys()].map((_, i) => (
+    <span key={i} className={classes.wingDot} />
+  ));
 
   return (
     <button
@@ -34,29 +38,10 @@ const NumberButton = ({ value, onNumberClick }: Props) => {
 
       <span className={classes.number}>{value}</span>
 
-      <span className={`${classes.wing} ${classes.leftWing}`}></span>
-      <span className={`${classes.wing} ${classes.rightWing}`}></span>
-
-
+      <span className={`${classes.wing} ${classes.leftWing}`}>{leftDots}</span>
+      <span className={`${classes.wing} ${classes.rightWing}`}>{rightDots}</span>
     </button>
   );
 };
 
 export default NumberButton;
-
-/**
- * NumberButton will have a value for the button and be
- * styled to look like a ladybug
- * onclick applies a style (expose number, move wings)
- * and adds its val to number state arr
- */
-
-/**
- * base holds
- * head
- * 6 legs squares rotated, two borders
- * body (size of base) has numbers
- * wings
- * left and right
- * div val and put dot in each, rem on left
- */

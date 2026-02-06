@@ -25,9 +25,19 @@
   left: 16px;
 }
 
+/* DOTS ON WINGS  */
+.wingDot {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  background-color: var(--black);
+  margin: 1px;
+  border-radius: 50%;
+}
+
 /* EYES  */
 .eye {
-  background: var(--black);
+  background-color: var(--black);
   width: 5px;
   height: 5px;
   border-radius: 50%;
@@ -44,7 +54,7 @@
 
 /* YELLOW DOTS ABOVE WINGS ... SHOULDER WORKS FOR ME  */
 .shoulder {
-  background: var(--gold);
+  background-color: var(--gold);
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -111,7 +121,7 @@
 }
 
 .wing {
-  background: var(--red);
+  background-color: var(--red);
   height: 36px;
   width: 28px;
   top: 20px;

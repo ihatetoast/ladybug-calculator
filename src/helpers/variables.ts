@@ -1,5 +1,6 @@
 
 export const OPERATORS: string[] = ['+', '-', 'x', '÷', '/', '*'];
+
 export const VALID_KEYS: string[] = [
   '0',
   '1',

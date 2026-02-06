@@ -23,27 +23,25 @@
   background-color: var(--cater-black);
 }
 .end,
-.white,
 .yellow,
 .green {
   flex: 1;
 }
-.black {
-  width: 2px;
-}
+
 .end {
   flex: 2;
 }
 
-.white {
-  background-color: var(--cater-white);
-}
 .green {
   background-color: var(--green);
+  border-right: 1px solid var(--white);
+  border-left: 1px solid var(--black);
 }
 
 .yellow {
   background-color: var(--cater-yellow);
+  border-right: 2px solid var(--white);
+  border-left: 2px solid var(--black);
 }
 
 .sign {
@@ -63,23 +61,18 @@
   top: 65%;
 }
 
-
-.buttonBase:hover .black{
-background-color: var(--cater-white);
-}
-
-.buttonBase:hover .white {
-  background-color: var(--cater-black);
-}
 .buttonBase:hover .green {
- background-color: var(--cater-yellow);
+  background-color: var(--cater-yellow);
+  border-left: 1px solid var(--white);
+  border-right: 1px solid var(--black);
 }
 
 .buttonBase:hover .yellow {
-    background-color: var(--green);
+  background-color: var(--green);
+  border-left: 2px solid var(--white);
+  border-right: 2px solid var(--black);
 }
 
 .buttonBase:hover .sign {
-    background-color: var(--cater-white);
-    
+  background-color: var(--cater-white);
 }
