@@ -26,21 +26,29 @@ const CalculatorBody = () => {
   // deriv from calculatedAns state
   const isEvaluated = calculatedAns !== null;
 
+  /**
+   * 
+   * when (-45) each del takes one char at a time INSIDE ()s
+   * so (-45) to (-4) to (-) to () and ()s stay as i type again.
+   *  (-45) to (-4) to (-)  then adding numbers becomes (-5x6) = -30
+   * or (-45) to (-4) to (-) to () keeps () when I add more.
+   */
+
   function handleClear(type: string) {
     // if display is 0 and expression is empty. return.
 
-      if (type === 'del') {
-        if (isError)return;
-        // bug to fix: if the answer is negative, array is nan because of -
-        // ? note if neg. slice on the Math.abs and if neg, make neg again.
-        if (!isEvaluated) {
-          console.log('deleting an unevaluated expression, one char at a time');
-        } else {
-          console.log(
-            'clear history and del one digit at a time of the eval answer',
-          );
-        }
+    if (type === 'del') {
+      if (isError) return;
+      // bug to fix: if the answer is negative, array is nan because of -
+      // ? note if neg. slice on the Math.abs and if neg, make neg again.
+      if (!isEvaluated) {
+        console.log('deleting an unevaluated expression, one char at a time');
+      } else {
+        console.log(
+          'clear history and del one digit at a time of the eval answer',
+        );
       }
+    }
 
     if (type === 'a/c') {
       clearAll();
@@ -92,15 +100,17 @@ const CalculatorBody = () => {
       return;
     }
 
-    // if 6. + convert to 6.0 + in display
+    // if 6. + convert to 6.0 + in display.
     const lastChar = display.slice(0 - 1);
     if (lastChar === '.') {
       setDisplay((prev) => prev.concat('0'));
     }
 
     // if current value is empty (not holding a number) and the epxression elem is a string aka oper
-    if (currentValue === '' &&typeof expression[expression.length - 1] === 'string' ) {
-      console.log(expression[expression.length - 1]);
+    if (
+      currentValue === '' &&
+      typeof expression[expression.length - 1] === 'string'
+    ) {
       setDisplay((prev) => {
         const newStr = prev.slice(0, -1) + operation;
         return newStr;
@@ -113,13 +123,14 @@ const CalculatorBody = () => {
       setDisplay((prev) => {
         return prev.concat(operation);
       });
-
       setExpression((prev) => [...prev, Number(currentValue), operation]);
     }
 
     setCurrentValue('');
   }
-  // katy 
+  // katy
+  // todo: 4 - 9 + then = should be 4 - 9 with -5 ans. currently that leads to correct ans but 4 - 9 + 0
+  // so if last in display is an oper, ignore
   function handleEqualClick() {
     // CASE 1:  clicking = again after eval (= = = ...)
     if (
@@ -135,15 +146,21 @@ const CalculatorBody = () => {
     }
 
     // CASE 2: clicking = to evaluate "new" expression:
-    // CASE 2b: if no number after last operation, just add 0
-    const expToEval = [...expression, Number(currentValue)];
+    const expToEval = [...expression];
+    // remove oper to avoid 9 + 4 x =
+    if (typeof expToEval[expToEval.length - 1] === 'string') {
+      expToEval.pop();
+    }
+
+    if (currentValue !== '' && currentValue !== '0') {
+      expToEval.push(Number(currentValue));
+    }
     if (expToEval.length < 3) return; // not enough to eval
 
     setExpression((prev) => [...prev, Number(currentValue)]);
 
     const result = evalExpression(expToEval);
     if (typeof result === 'string') {
-      // todo: needs to show bad equation above error msg
       setDisplay(expToEval.join(' '));
       setIsError(true);
       return;
@@ -183,13 +200,18 @@ const CalculatorBody = () => {
    */
 
   /**
-   * BUG 1: doesn't move toggled to expression yet. move it and clear current
-   *
-   * and dealing with the ()s makes it buggier. hold on this.
-   *
-   *  BUG 2: on smartphone someting like 3 toggle 4 looks like
-   * (-3)x5
-   *  so handle implicit mult
+   * desired behaviour
+   * 3 toggle (-3)
+   * toggle again 3
+   * 
+   * 4-5 toggle 4+5 because 4 - - 5 is plus
+   * toggle again 4+(-5)
+   * 
+   * if eval and answer was pos becomes neg with ()s
+   * ex 3 x 5 = 15 toggle (-15)
+   * if pos 4 -6 = -2 toggle 2
+   * 
+   * 2 toggle (-2) and number becomes mult. (-2)x6
    */
   function handleToggleClick() {
     if (currentValue === '0') {
@@ -212,7 +234,11 @@ const CalculatorBody = () => {
   return (
     <div className={classes.calcBody}>
       <div className={classes.screen}>
-        <Display runningVal={display} answer={calculatedAns} showError={isError}/>
+        <Display
+          runningVal={display}
+          answer={calculatedAns}
+          showError={isError}
+        />
       </div>
       <div className={classes.buttons}>
         <DeleteButton text='a/c' onDeleteClick={() => handleClear('a/c')} />
