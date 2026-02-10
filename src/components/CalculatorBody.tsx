@@ -27,11 +27,13 @@ const CalculatorBody = () => {
   const isEvaluated = calculatedAns !== null;
 
   /**
-   * 
+   *
    * when (-45) each del takes one char at a time INSIDE ()s
    * so (-45) to (-4) to (-) to () and ()s stay as i type again.
    *  (-45) to (-4) to (-)  then adding numbers becomes (-5x6) = -30
    * or (-45) to (-4) to (-) to () keeps () when I add more.
+   *
+   * just lop off one at a time. the above is stupid.
    */
 
   function handleClear(type: string) {
@@ -49,7 +51,6 @@ const CalculatorBody = () => {
         );
       }
     }
-
     if (type === 'a/c') {
       clearAll();
     }
@@ -68,8 +69,8 @@ const CalculatorBody = () => {
       setDisplay(valStr);
       setCurrentValue(valStr);
     } else {
-      setDisplay((prev) => prev.concat(valStr));
-      setCurrentValue((prev) => prev.concat(valStr));
+      setDisplay((prev) => prev + valStr);
+      setCurrentValue((prev) => prev + valStr);
     }
   }
 
@@ -92,6 +93,7 @@ const CalculatorBody = () => {
 
   function handleOperatorClick(operation: string) {
     // previous answer. user clicks oper, prev ans becomes first in expression
+
     if (isEvaluated && calculatedAns !== null) {
       setExpression([calculatedAns, operation]);
       setDisplay(`${calculatedAns}${operation}`);
@@ -100,13 +102,6 @@ const CalculatorBody = () => {
       return;
     }
 
-    // if 6. + convert to 6.0 + in display.
-    const lastChar = display.slice(0 - 1);
-    if (lastChar === '.') {
-      setDisplay((prev) => prev.concat('0'));
-    }
-
-    // if current value is empty (not holding a number) and the epxression elem is a string aka oper
     if (
       currentValue === '' &&
       typeof expression[expression.length - 1] === 'string'
@@ -120,18 +115,20 @@ const CalculatorBody = () => {
       newExp.splice(-1, 1, operation);
       setExpression(newExp);
     } else {
-      setDisplay((prev) => {
-        return prev.concat(operation);
-      });
+      // if 6. + convert to 6.0 + in display.
+      const needsZero = display.slice(-1) === '.' ? '0' : '';
+      setDisplay((prev) => prev + needsZero + operation);
       setExpression((prev) => [...prev, Number(currentValue), operation]);
     }
 
     setCurrentValue('');
   }
-  // katy
+
   // todo: 4 - 9 + then = should be 4 - 9 with -5 ans. currently that leads to correct ans but 4 - 9 + 0
   // so if last in display is an oper, ignore
   function handleEqualClick() {
+    const expToEval = [...expression, Number(currentValue)];
+    console.log(expToEval);
     // CASE 1:  clicking = again after eval (= = = ...)
     if (
       isEvaluated &&
@@ -146,35 +143,29 @@ const CalculatorBody = () => {
     }
 
     // CASE 2: clicking = to evaluate "new" expression:
-    const expToEval = [...expression];
-    // remove oper to avoid 9 + 4 x =
     if (typeof expToEval[expToEval.length - 1] === 'string') {
       expToEval.pop();
     }
 
-    if (currentValue !== '' && currentValue !== '0') {
-      expToEval.push(Number(currentValue));
-    }
     if (expToEval.length < 3) return; // not enough to eval
 
     setExpression((prev) => [...prev, Number(currentValue)]);
 
     const result = evalExpression(expToEval);
+    // if string, it's an error, so
     if (typeof result === 'string') {
       setDisplay(expToEval.join(' '));
       setIsError(true);
       return;
     }
 
-    // remember for when user clicks = after an eval
     const lastOp = expToEval[expToEval.length - 2] as string;
     const lastNum = expToEval[expToEval.length - 1] as number;
-
     setLastOperand(lastNum);
     setLastOperation(lastOp);
     setCalculatedAns(result);
-    setDisplay(expToEval.join(' '));
-    setCurrentValue(result.toString());
+    const displayString = expToEval.join(' ');
+    setDisplay(displayString);
   }
 
   // todo: allow user to use keyboard:
@@ -203,22 +194,39 @@ const CalculatorBody = () => {
    * desired behaviour
    * 3 toggle (-3)
    * toggle again 3
-   * 
+   *
    * 4-5 toggle 4+5 because 4 - - 5 is plus
    * toggle again 4+(-5)
-   * 
+   *
    * if eval and answer was pos becomes neg with ()s
    * ex 3 x 5 = 15 toggle (-15)
    * if pos 4 -6 = -2 toggle 2
-   * 
+   *
    * 2 toggle (-2) and number becomes mult. (-2)x6
    */
+
+  // katy
   function handleToggleClick() {
-    if (currentValue === '0') {
+    if (currentValue === '0') return;
+
+    if (isEvaluated) {
+      // start over with prev ans toggled and first operand
+      setExpression([])
+      setLastOperand(null);
+      setLastOperation(null);
+      setCalculatedAns(null);
+      const toggled = Number(calculatedAns) * -1;
+      setCurrentValue(toggled.toString())
+      setDisplay(`(${toggled})`);
       return;
     }
-    if (typeof calculatedAns === 'number') {
-      console.log('calc ans to toggle');
+
+    if (!isEvaluated) {
+      const toggled = Number(currentValue) * -1;
+
+      setExpression((prev) => [...prev, toggled]);
+      setDisplay((prev) => prev + `(${toggled})`);
+      setCurrentValue('0');
     }
   }
 

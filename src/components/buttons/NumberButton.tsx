@@ -39,7 +39,9 @@ const NumberButton = ({ value, onNumberClick }: Props) => {
       <span className={classes.number}>{value}</span>
 
       <span className={`${classes.wing} ${classes.leftWing}`}>{leftDots}</span>
-      <span className={`${classes.wing} ${classes.rightWing}`}>{rightDots}</span>
+      <span className={`${classes.wing} ${classes.rightWing}`}>
+        {rightDots}
+      </span>
     </button>
   );
 };

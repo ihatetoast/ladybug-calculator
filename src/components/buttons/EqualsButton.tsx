@@ -9,7 +9,7 @@ const EqualsButton = ({ onEqualClick }: Props) => {
     <button
       className={`${classes.buttonBase} ${classes.equal}`}
       aria-label='equals'
-      onClick={onEqualClick}
+      onClick={() => onEqualClick()}
     >
       <div className={classes.stripes}>
         <span className={classes.end}></span>
