@@ -13,9 +13,19 @@ On hover and click, the buttons have unique behaviour:
  - black/red circle (toggle pos neg) switch colors
  - dot (decima) shrink. This is the only button I might change once I get an idea of a bug/garden look that is ... "dottish"
 
+ Notes:
+ - Implicit multiplication. e.g. when user clicks 5 toggle 6 it'll becomes (-5)6 on display, but expression will be -5 x 6.
+
 ## How
 
 - React
 - TypeScript
 - CSS
 - Vite
+
+## What about ...
+aka "Intentional limitations"
+- Toggling with no current number defaults to 0 (so 4 x toggle -> 4(0))
+- Toggle toggle will keep parentheses as it does not affect evaluation: 8 toggle (-8) toggle (8) x 6 evals to 48. 
+- Display removes parentheses in history after evaluation (If I do a larger calc, I'll attempt to change this)
+- Basic operators only (no %, √, parentheses for grouping -- leave for another larger calc)

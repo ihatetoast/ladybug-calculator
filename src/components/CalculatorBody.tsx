@@ -68,18 +68,31 @@ const CalculatorBody = () => {
     if (display === '0') {
       setDisplay(valStr);
       setCurrentValue(valStr);
+    } else if (currentValue.startsWith('-') && currentValue.length > 1) {
+      // implicit mult. if -5 and toggle then 6, expression needs [-5, "x", 6]
+      const firstNum = parseFloat(currentValue);
+      setDisplay((prev) => `${prev}${valStr}`);
+      setExpression((prev) => [...prev, firstNum, 'x']);
+      setCurrentValue(valStr);
     } else {
       setDisplay((prev) => prev + valStr);
       setCurrentValue((prev) => prev + valStr);
     }
   }
-
+  // katy
+  // test is 3 toggle .5. should become (-3).5 or 0.5 and eval to -3 x .5 -1.5
   function handleDecimalClick() {
     if (hasDecimal(currentValue)) {
       return;
     }
     if (isEvaluated) {
       clearAll();
+    }
+    // if current is negative, then hitting decimal will trigger implicit mult
+    if (currentValue.startsWith('-') && currentValue.length > 1) {
+      setExpression(prev => [...prev, parseFloat(currentValue), 'x']);
+      setCurrentValue('');
+      setDisplay((prev) => prev.concat('0'));
     }
     // add 0 before . if previous click was operator: so 4+. becomes 4+0.
     const last = display.slice(0 - 1);
@@ -110,7 +123,6 @@ const CalculatorBody = () => {
         const newStr = prev.slice(0, -1) + operation;
         return newStr;
       });
-
       const newExp = [...expression];
       newExp.splice(-1, 1, operation);
       setExpression(newExp);
@@ -120,7 +132,6 @@ const CalculatorBody = () => {
       setDisplay((prev) => prev + needsZero + operation);
       setExpression((prev) => [...prev, Number(currentValue), operation]);
     }
-
     setCurrentValue('');
   }
 
@@ -128,7 +139,6 @@ const CalculatorBody = () => {
   // so if last in display is an oper, ignore
   function handleEqualClick() {
     const expToEval = [...expression, Number(currentValue)];
-    console.log(expToEval);
     // CASE 1:  clicking = again after eval (= = = ...)
     if (
       isEvaluated &&
@@ -168,65 +178,33 @@ const CalculatorBody = () => {
     setDisplay(displayString);
   }
 
-  // todo: allow user to use keyboard:
-  //
-  /**
-   * useeffect(() =>{
-   * const handleKeyPress = (e) => {
-   *  const key = e.key;
-   *   if validKeys includes key, handleKeyClick(key)
-   *  make sure * and 'x' or "X to lower case" are considered for mult.
-   *  ignore ÷. no one knows that
-   *  note on ui that this is a basic calc, so doesn't include ( or )
-   * }
-   *
-   * window.addEventListener('keydown', handleKeyPress);
-   *  and clean up with
-   *  return () => {
-   *   window.removeEventListener('keydown', handleKeyPress);
-   * }
-   *
-   * }, [])
-   *
-   */
-
-  /**
-   * desired behaviour
-   * 3 toggle (-3)
-   * toggle again 3
-   *
-   * 4-5 toggle 4+5 because 4 - - 5 is plus
-   * toggle again 4+(-5)
-   *
-   * if eval and answer was pos becomes neg with ()s
-   * ex 3 x 5 = 15 toggle (-15)
-   * if pos 4 -6 = -2 toggle 2
-   *
-   * 2 toggle (-2) and number becomes mult. (-2)x6
-   */
-
-  // katy
   function handleToggleClick() {
     if (currentValue === '0') return;
 
     if (isEvaluated) {
       // start over with prev ans toggled and first operand
-      setExpression([])
+      setExpression([]);
       setLastOperand(null);
       setLastOperation(null);
       setCalculatedAns(null);
       const toggled = Number(calculatedAns) * -1;
-      setCurrentValue(toggled.toString())
+      setCurrentValue(toggled.toString());
       setDisplay(`(${toggled})`);
       return;
     }
 
     if (!isEvaluated) {
       const toggled = Number(currentValue) * -1;
-
-      setExpression((prev) => [...prev, toggled]);
-      setDisplay((prev) => prev + `(${toggled})`);
-      setCurrentValue('0');
+      if (expression.length === 0) {
+        setDisplay(`(${toggled.toString()})`);
+        setCurrentValue(toggled.toString());
+      } else {
+        setCurrentValue(toggled.toString());
+        setDisplay((prev) => {
+          const newStr = prev.slice(0, -1) + `(${toggled.toString()})`;
+          return newStr;
+        });
+      }
     }
   }
 
@@ -290,3 +268,25 @@ const CalculatorBody = () => {
 };
 
 export default CalculatorBody;
+
+// todo: allow user to use keyboard:
+//
+/**
+ * useeffect(() =>{
+ * const handleKeyPress = (e) => {
+ *  const key = e.key;
+ *   if validKeys includes key, handleKeyClick(key)
+ *  make sure * and 'x' or "X to lower case" are considered for mult.
+ *  ignore ÷. no one knows that
+ *  note on ui that this is a basic calc, so doesn't include ( or )
+ * }
+ *
+ * window.addEventListener('keydown', handleKeyPress);
+ *  and clean up with
+ *  return () => {
+ *   window.removeEventListener('keydown', handleKeyPress);
+ * }
+ *
+ * }, [])
+ *
+ */

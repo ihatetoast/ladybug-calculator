@@ -18,7 +18,7 @@ const Display = ({ runningVal, answer, showError }: Props) => {
   ) : (
     <>
       <div className={`${classes.ledSmall} ${classes.error}`}>{runningVal}</div>
-      <div className={classes.led}>Error</div>
+      <div className={classes.led}>Srsly? Only slugs divide by 0!</div>
     </>
   );
 };
