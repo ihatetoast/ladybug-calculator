@@ -19,6 +19,7 @@ export const VALID_KEYS: string[] = [
   '/',
   '.',
   'Enter',
+  '=',
   'Backspace',
   'Escape',
 ];

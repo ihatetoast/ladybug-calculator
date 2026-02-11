@@ -62,11 +62,6 @@ export const calculate = (
   }
 };
 
-// count the chars (decimal)
-// split on the .
-export function hasDecimal(str: string): boolean {
-  return str.split('.').length - 1 >= 1;
-}
 
 export function roundResult (num: number): string {
   // round but also remove trailing 00s for display

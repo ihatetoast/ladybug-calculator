@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import Display from './Display';
 import DeleteButton from './buttons/DeleteButton';
@@ -8,8 +8,8 @@ import NumberButton from './buttons/NumberButton';
 import DecimalButton from './buttons/DecimalButton';
 import EqualsButton from './buttons/EqualsButton';
 
-import { calculate, evalExpression, hasDecimal } from '../helpers/utils.ts';
-import { OPERATORS } from '../helpers/variables.ts';
+import { calculate, evalExpression } from '../helpers/utils.ts';
+import { OPERATORS, VALID_KEYS } from '../helpers/variables.ts';
 import classes from './CalculatorBody.module.css';
 
 const CalculatorBody = () => {
@@ -23,90 +23,127 @@ const CalculatorBody = () => {
   const [lastOperation, setLastOperation] = useState<string | null>(null);
   const [isError, setIsError] = useState<boolean>(false);
 
-  // deriv from calculatedAns state
+  // derive from calculatedAns state
   const isEvaluated = calculatedAns !== null;
 
-  /**
-   *
-   * when (-45) each del takes one char at a time INSIDE ()s
-   * so (-45) to (-4) to (-) to () and ()s stay as i type again.
-   *  (-45) to (-4) to (-)  then adding numbers becomes (-5x6) = -30
-   * or (-45) to (-4) to (-) to () keeps () when I add more.
-   *
-   * just lop off one at a time. the above is stupid.
-   */
-
-  function handleClear(type: string) {
-    if (type === 'a/c') {
-      clearAll();
-    }
-    // if display is 0 and expression is empty. return.
-
-    if (type === 'del') {
-      if (isError) return;
-
-      if (display.length === 1 || display === '0') {
-        clearAll();
+  const handleClear = useCallback(
+    (type: string) => {
+      if (type === 'a/c') {
+        setDisplay('0');
+        setCurrentValue('0');
+        setCalculatedAns(null);
+        setExpression([]);
+        setLastOperand(null);
+        setLastOperation(null);
+        setIsError(false);
         return;
       }
 
-      if (isEvaluated) {
-        // clear running val / history / equation as a string
-        setExpression([]);
+      if (type === 'del') {
+        if (isError) return; // only ac clears errors
 
-        if (calculatedAns !== null) {
-          const answerStr = calculatedAns.toString();
-          const newValue = answerStr.slice(0, -1) || '0';
-
-          setDisplay(newValue);
-          setCurrentValue(newValue);
-          setCalculatedAns(null);
+        if (isEvaluated && calculatedAns !== null) {
+          // clear running val / history / equation as a string
+          setExpression([]);
+          if (calculatedAns !== null) {
+            const answerStr = calculatedAns.toString();
+            const newValue = answerStr.slice(0, -1) || '0';
+            setDisplay(newValue);
+            setCurrentValue(newValue);
+            setCalculatedAns(null);
+            return;
+          }
         }
-      } else {
-        console.log('deleting an unevaluated expression, one char at a time');
-        setDisplay((prev) => prev.slice(0, -1));
-        setCurrentValue((prev) => prev.slice(0, -1));
-      }
-    }
-  }
 
-  function handleNumberClick(val: number) {
-    const valStr = val.toString();
-    // if exp is eval, start anew.
-    if (isEvaluated) {
-      clearAll();
-      setDisplay(valStr);
-      setCurrentValue(valStr);
+        // handle ()s to clear cur val. ()s are a pain.
+        if (currentValue.includes('(') || currentValue.includes(')')) {
+          setCurrentValue('0');
+          setDisplay(expression.join(' '));
+          return;
+        }
+        // one at a time
+        if (currentValue && currentValue !== '0') {
+          const newValue = currentValue.slice(0, -1) || '0';
+          setCurrentValue(newValue);
+          setDisplay((prev) => prev.slice(0, -1) || '0');
+          return;
+        }
+
+        // now after curval being deleted, so delete last value of exp arr
+        if (expression.length > 0) {
+          const newExp = [...expression];
+          newExp.pop(); // Remove last item
+          setExpression(newExp);
+          setDisplay(newExp.join(' '));
+          setCurrentValue('0');
+          return;
+        }
+
+        setDisplay('0');
+        setCurrentValue('0');
+        setCalculatedAns(null);
+        setExpression([]);
+        setLastOperand(null);
+        setLastOperation(null);
+        setIsError(false);
+      }
+    },
+    [calculatedAns, currentValue, expression, isError, isEvaluated],
+  );
+
+  const handleNumberClick = useCallback(
+    (val: number) => {
+      const valStr = val.toString();
+      // if exp is eval, start anew.
+      if (isEvaluated) {
+        setDisplay(valStr);
+        setCurrentValue(valStr);
+        setCalculatedAns(null);
+        setExpression([]);
+        setLastOperand(null);
+        setLastOperation(null);
+        setIsError(false);
+        setDisplay(valStr);
+        setCurrentValue(valStr);
+        return;
+      }
+      if (display === '0') {
+        setDisplay(valStr);
+        setCurrentValue(valStr);
+      } else if (currentValue.startsWith('-') && currentValue.length > 1) {
+        // implicit mult. if -5 and toggle then 6, expression needs [-5, "x", 6]
+        const firstNum = Number(currentValue);
+        setDisplay((prev) => `${prev}${valStr}`);
+        setExpression((prev) => [...prev, firstNum, 'x']);
+        setCurrentValue(valStr);
+      } else {
+        setDisplay((prev) => prev + valStr);
+        setCurrentValue((prev) => prev + valStr);
+      }
+    },
+    [currentValue, display, isEvaluated],
+  );
+
+  const handleDecimalClick = useCallback(() => {
+    if (currentValue.split('.').length - 1 >= 1) {
       return;
     }
-    if (display === '0') {
-      setDisplay(valStr);
-      setCurrentValue(valStr);
-    } else if (currentValue.startsWith('-') && currentValue.length > 1) {
-      // implicit mult. if -5 and toggle then 6, expression needs [-5, "x", 6]
-      const firstNum = parseFloat(currentValue);
-      setDisplay((prev) => `${prev}${valStr}`);
-      setExpression((prev) => [...prev, firstNum, 'x']);
-      setCurrentValue(valStr);
-    } else {
-      setDisplay((prev) => prev + valStr);
-      setCurrentValue((prev) => prev + valStr);
-    }
-  }
-  // katy
-  // test is 3 toggle .5. should become (-3).5 or 0.5 and eval to -3 x .5 -1.5
-  function handleDecimalClick() {
-    if (hasDecimal(currentValue)) {
-      return;
-    }
     if (isEvaluated) {
-      clearAll();
+      setDisplay('0');
+      setCurrentValue('0');
+      setCalculatedAns(null);
+      setExpression([]);
+      setLastOperand(null);
+      setLastOperation(null);
+      setIsError(false);
+      return;
     }
     // if current is negative, then hitting decimal will trigger implicit mult
     if (currentValue.startsWith('-') && currentValue.length > 1) {
-      setExpression((prev) => [...prev, parseFloat(currentValue), 'x']);
+      setExpression((prev) => [...prev, Number(currentValue), 'x']);
       setCurrentValue('');
       setDisplay((prev) => prev.concat('0'));
+      return;
     }
     // add 0 before . if previous click was operator: so 4+. becomes 4+0.
     const last = display.slice(0 - 1);
@@ -116,11 +153,10 @@ const CalculatorBody = () => {
       setDisplay((prev) => prev.concat('.'));
     }
     setCurrentValue((prev) => prev.concat('.'));
-  }
+  }, [currentValue, display, isEvaluated]);
 
-  function handleOperatorClick(operation: string) {
+  const handleOperatorClick = useCallback((operation: string) => {
     // previous answer. user clicks oper, prev ans becomes first in expression
-
     if (isEvaluated && calculatedAns !== null) {
       setExpression([calculatedAns, operation]);
       setDisplay(`${calculatedAns}${operation}`);
@@ -147,13 +183,11 @@ const CalculatorBody = () => {
       setExpression((prev) => [...prev, Number(currentValue), operation]);
     }
     setCurrentValue('');
-  }
+  }, [calculatedAns, currentValue, display, expression, isEvaluated]);
 
-  // todo: 4 - 9 + then = should be 4 - 9 with -5 ans. currently that leads to correct ans but 4 - 9 + 0
-  // so if last in display is an oper, ignore
-  function handleEqualClick() {
+  const handleEqualClick = useCallback(() => {
     const expToEval = [...expression, Number(currentValue)];
-    // CASE 1:  clicking = again after eval (= = = ...)
+    // clicking = again after eval (= = = ...)
     if (
       isEvaluated &&
       lastOperation !== null &&
@@ -166,7 +200,7 @@ const CalculatorBody = () => {
       return;
     }
 
-    // CASE 2: clicking = to evaluate "new" expression:
+    // clicking = to evaluate "new" expression:
     if (typeof expToEval[expToEval.length - 1] === 'string') {
       expToEval.pop();
     }
@@ -190,9 +224,9 @@ const CalculatorBody = () => {
     setCalculatedAns(result);
     const displayString = expToEval.join(' ');
     setDisplay(displayString);
-  }
+  }, [calculatedAns, currentValue, expression, isEvaluated, lastOperand, lastOperation]);
 
-  function handleToggleClick() {
+  const handleToggleClick = useCallback(() => {
     if (currentValue === '0') return;
 
     if (isEvaluated) {
@@ -221,17 +255,74 @@ const CalculatorBody = () => {
         });
       }
     }
-  }
+  }, [calculatedAns, currentValue, expression, isEvaluated]);
 
-  function clearAll(): void {
-    setDisplay('0');
-    setCurrentValue('0');
-    setCalculatedAns(null);
-    setExpression([]);
-    setLastOperand(null);
-    setLastOperation(null);
-    setIsError(false);
-  }
+  // handle the keyboard:
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const key = e.key;
+
+      // ignore other keys not part of a calc:
+      if (!VALID_KEYS.includes(key)) return;
+      // numbers:
+      if (key >= '0' && key <= '9') {
+        handleNumberClick(Number(key));
+        return;
+      }
+
+      // operators: all for mult and / for div as ÷ is an option + / combo
+      if (key === '+') {
+        handleOperatorClick('+');
+        return;
+      }
+      if (key === '-') {
+        handleOperatorClick('-');
+        return;
+      }
+      if (key === '*' || key === 'x' || key === 'X') {
+        handleOperatorClick('x');
+        return;
+      }
+      if (key === '/') {
+        handleOperatorClick('÷');
+        return;
+      }
+
+      // dec
+      if (key === '.') {
+        handleDecimalClick();
+        return;
+      }
+
+      // enter for equals as well as =
+      if (key === 'Enter' || key === '=') {
+        handleEqualClick();
+        return;
+      }
+
+      // backspace or del dep on keyboard. both are "Backspace"
+      if (key === 'Backspace') {
+        handleClear('del');
+        return;
+      }
+
+      // Escape = all clear
+      if (key === 'Escape') {
+        handleClear('a/c');
+        return;
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [
+    handleClear,
+    handleDecimalClick,
+    handleEqualClick,
+    handleNumberClick,
+    handleOperatorClick,
+    handleToggleClick,
+  ]);
+
   return (
     <div className={classes.calcBody}>
       <div className={classes.screen}>
@@ -283,25 +374,3 @@ const CalculatorBody = () => {
 };
 
 export default CalculatorBody;
-
-// todo: allow user to use keyboard:
-//
-/**
- * useeffect(() =>{
- * const handleKeyPress = (e) => {
- *  const key = e.key;
- *   if validKeys includes key, handleKeyClick(key)
- *  make sure * and 'x' or "X to lower case" are considered for mult.
- *  ignore ÷. no one knows that
- *  note on ui that this is a basic calc, so doesn't include ( or )
- * }
- *
- * window.addEventListener('keydown', handleKeyPress);
- *  and clean up with
- *  return () => {
- *   window.removeEventListener('keydown', handleKeyPress);
- * }
- *
- * }, [])
- *
- */
