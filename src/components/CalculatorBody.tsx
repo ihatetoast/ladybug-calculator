@@ -37,22 +37,36 @@ const CalculatorBody = () => {
    */
 
   function handleClear(type: string) {
+    if (type === 'a/c') {
+      clearAll();
+    }
     // if display is 0 and expression is empty. return.
 
     if (type === 'del') {
       if (isError) return;
-      // bug to fix: if the answer is negative, array is nan because of -
-      // ? note if neg. slice on the Math.abs and if neg, make neg again.
-      if (!isEvaluated) {
-        console.log('deleting an unevaluated expression, one char at a time');
-      } else {
-        console.log(
-          'clear history and del one digit at a time of the eval answer',
-        );
+
+      if (display.length === 1 || display === '0') {
+        clearAll();
+        return;
       }
-    }
-    if (type === 'a/c') {
-      clearAll();
+
+      if (isEvaluated) {
+        // clear running val / history / equation as a string
+        setExpression([]);
+
+        if (calculatedAns !== null) {
+          const answerStr = calculatedAns.toString();
+          const newValue = answerStr.slice(0, -1) || '0';
+
+          setDisplay(newValue);
+          setCurrentValue(newValue);
+          setCalculatedAns(null);
+        }
+      } else {
+        console.log('deleting an unevaluated expression, one char at a time');
+        setDisplay((prev) => prev.slice(0, -1));
+        setCurrentValue((prev) => prev.slice(0, -1));
+      }
     }
   }
 
@@ -90,7 +104,7 @@ const CalculatorBody = () => {
     }
     // if current is negative, then hitting decimal will trigger implicit mult
     if (currentValue.startsWith('-') && currentValue.length > 1) {
-      setExpression(prev => [...prev, parseFloat(currentValue), 'x']);
+      setExpression((prev) => [...prev, parseFloat(currentValue), 'x']);
       setCurrentValue('');
       setDisplay((prev) => prev.concat('0'));
     }
@@ -199,9 +213,10 @@ const CalculatorBody = () => {
         setDisplay(`(${toggled.toString()})`);
         setCurrentValue(toggled.toString());
       } else {
+        const sliceAmt = currentValue.length * -1;
         setCurrentValue(toggled.toString());
         setDisplay((prev) => {
-          const newStr = prev.slice(0, -1) + `(${toggled.toString()})`;
+          const newStr = prev.slice(0, sliceAmt) + `(${toggled.toString()})`;
           return newStr;
         });
       }
