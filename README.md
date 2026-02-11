@@ -17,14 +17,19 @@ On hover and click, the buttons have unique behaviour:
  - Implicit multiplication. e.g. when user clicks 5 toggle 6 it'll becomes (-5)6 on display, but expression will be -5 x 6.
 
 Calculated result
+
 ![Calculated result](screenshots/calculation.png)
 
 Divided by zero
+
 ![Divided by 0 error](screenshots/error.png)
 
 Hover effects on number, delete (or a/c), and an operator:
+
 ![Hover: number](screenshots/number.png)
+
 ![Hover: delete](screenshots/delete.png)
+
 ![Hover: operator](screenshots/delete.png)
 
 
