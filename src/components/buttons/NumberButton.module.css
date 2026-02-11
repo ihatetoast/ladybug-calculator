@@ -14,7 +14,7 @@
 .wing {
   position: absolute;
 }
-/* https://www.charleyharperartstudio.com/ladybug-sampler-bookmark.html  */
+
 .antennae {
   width: 20px;
   height: 8px;
@@ -119,6 +119,7 @@
   color: var(--white);
   bottom: 5px;
   left: calc(50% - 8px);
+  transition: opacity 0.3s ease-in-out;
 }
 
 .wing {
@@ -139,22 +140,23 @@
     border-bottom-right-radius: 100px;
     text-align: left;
     right: -1px;
-
+    
 }
 
 .buttonBase:hover .wing.leftWing {
 transform: rotate(40deg);
 transform-origin: top center;
-transition: transform 0.2s ease-in;
+transition: transform 0.3s ease-in-out;
+
 }
 
 .buttonBase:hover .wing.rightWing {
 transform: rotate(-40deg);
 transform-origin: top center;
-transition: transform 0.2s ease-in;
+transition: transform 0.3s ease-in-out;
 }
 
 .buttonBase:hover .number {
   opacity: 1;
-  transition: transform 0.2s ease-in;
+  
 }

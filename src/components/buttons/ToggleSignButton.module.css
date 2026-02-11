@@ -12,6 +12,7 @@
   position: absolute;
   width: 100%;
   left: 0px;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .buttonSemi.black {
@@ -38,23 +39,28 @@
   position: absolute;
   font-size: 1.2rem;
   font-weight: 600;
+  transition: transform 0.3s ease-in-out;
+}
+
+.buttonBase:hover .signs {
+  transform: rotate(225deg);
 }
 
 .signs.pos {
   left: 35%;
   top: -5%;
-    transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 .signs.neg {
   left: 35%;
   top: -5%;
-    transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .buttonBase:hover .buttonSemi.red {
-    background-color: var(--black);
+  background-color: var(--black);
 }
 
 .buttonBase:hover .buttonSemi.black {
-    background-color: var(--red);
+  background-color: var(--red);
 }

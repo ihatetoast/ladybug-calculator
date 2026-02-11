@@ -25,6 +25,3 @@ const DeleteButton = ({ text, onDeleteClick }: Props) => {
 
 export default DeleteButton;
 
-// will be a/c and delete dep on the text and function.
-// css will have it be a frog https://www.charleyharperartstudio.com/frog-ornament.html
-// with text in yellow belly. frogs eat ladybugs

@@ -7,8 +7,6 @@ type Props = {
 };
 
 const Display = ({ runningVal, answer, showError }: Props) => {
-  // console.log("running val is passed as display", runningVal);
-  // console.log("answer is passed as calculated answer ", answer);
   const displayAns = typeof answer === 'number' ? roundResult(answer) : answer;
   return !showError ? (
     <>
@@ -18,7 +16,7 @@ const Display = ({ runningVal, answer, showError }: Props) => {
   ) : (
     <>
       <div className={`${classes.ledSmall} ${classes.error}`}>{runningVal}</div>
-      <div className={`${classes.led} ${classes.error}`}>Srsly? Only slugs divide by 0!</div>
+      <div className={`${classes.led} ${classes.error}`}>Error!</div>
     </>
   );
 };

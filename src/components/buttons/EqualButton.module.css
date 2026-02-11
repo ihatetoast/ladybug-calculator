@@ -36,20 +36,21 @@
   background-color: var(--green);
   border-right: 1px solid var(--white);
   border-left: 1px solid var(--black);
+  transition: all 0.3s ease-in-out;
 }
 
 .yellow {
   background-color: var(--cater-yellow);
   border-right: 2px solid var(--white);
   border-left: 2px solid var(--black);
+  transition: all 0.3s ease-in-out;
 }
 
 .sign {
   position: absolute;
   background-color: var(--black);
-  border: 2px solid var(--cater-black);
   width: 30%;
-  height: 8%;
+  height: 15%;
   left: 50%;
   transform: translate(-50%, -50%);
 }

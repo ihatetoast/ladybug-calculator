@@ -2,7 +2,6 @@
   width: var(--diameter);
   height: var(--diameter);
   border-radius: 50%;
-  background-color: green;
   position: relative;
   justify-self: center;
 }
@@ -26,11 +25,11 @@
   transform: translate(-50%, -50%);
   border-radius: 50%;
   transform-origin: left center;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .bgPetal {
   background-color: var(--petal-back);
-  transform: translate(-0%, -50%) rotate(22.5deg);
 }
 
 .signPetal {
@@ -110,7 +109,6 @@
 }
 
 .divDot {
-  /* background-color: var(--petal-active); */
   position: absolute;
   width: 0.75rem;
   height: 0.75rem;
@@ -118,16 +116,13 @@
   top: 50%;
   left: 65%;
   transform: translate(-50%, -50%);
+  transition: background-color 0.3s ease-in-out;
 }
 
 .buttonBase:hover .signPetal.active {
   background-color: var(--petal-active);
 }
 
-.buttonBase:hover .signPetal.active .divDot {
-  background-color: var(--petal-active);
-}
-
-.buttonBase:hover .signPetals .divDot {
+.buttonBase:hover .signPetal .divDot {
   background-color: var(--petal-active);
 }

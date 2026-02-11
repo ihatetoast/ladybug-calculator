@@ -16,6 +16,7 @@
   position: relative;
   justify-self: center;
   padding: 0;
+  transform: rotate(45deg);
 }
 
 .swatterGrid {
@@ -47,6 +48,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .swatterHandle {
   position: absolute;
   height: 73%;
@@ -59,10 +61,22 @@
   background-color: #c8c6c8;
 }
 
+.swatterHandle::after {
+  content: '';
+  position: absolute;
+  background-color: var(--black);
+  width: 20px;
+  height: 3px;
+  top: -6px;
+  left: 25px;
+  transform: rotate(-45deg);
+}
+
 .swatterText {
   position: relative;
   z-index: 10;
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
+  transform: rotate(-45deg);
 }
 
 .bugGuts {
@@ -71,13 +85,9 @@
   height: 100%;
   top: 0;
   z-index: 6;
-  display: none;
 }
 
-.buttonBase:hover .bugGuts {
-  display: block;
-}
-
+/* random goops, not a set pattern. goop is squished bug RIP  */
 .goop {
   display: inline-flex;
   position: absolute;
@@ -85,56 +95,94 @@
   height: 15px;
   border-radius: 50%;
   background-color: var(--bug-guts-olive-green);
+  opacity: 0;
+  transform: scale(0);
 }
 
+
 .goop:nth-of-type(1) {
+  --goop-opacity: 0.7;
   top: 20%;
   left: 19%;
   background-color: var(--gold);
-  opacity: 0.7;
 }
+
 .goop:nth-of-type(2) {
+  --goop-opacity: 0.8;
   top: 54%;
   left: 29%;
   background-color: var(--bug-guts-bronze-yellow);
-  opacity: 0.8;
 }
+
 .goop:nth-of-type(3) {
+  --goop-opacity: 0.7;
   top: 39%;
   left: 39%;
   background-color: var(--gold);
-  opacity: 0.7;
 }
+
 .goop:nth-of-type(4) {
+  --goop-opacity: 0.6;
   top: 33%;
   left: 49%;
-  opacity: 0.6;
 }
+
 .goop:nth-of-type(5) {
+  --goop-opacity: 0.7;
   top: 61%;
   left: 50%;
   background-color: var(--gold);
-  opacity: 0.7;
 }
+
 .goop:nth-of-type(6) {
+  --goop-opacity: 0.8;
   top: 14%;
   left: 9%;
   background-color: var(--bug-guts-bronze-yellow);
-  opacity: 0.8;
 }
+
 .goop:nth-of-type(7) {
+  --goop-opacity: 0.6;
   top: 49%;
   left: 32%;
-  opacity: 0.6;
 }
+
 .goop:nth-of-type(8) {
-  top: 33%;
-  left: 49%;
-  opacity: 0.6;
+  --goop-opacity: 0.6;
+  top: 30%;
+  left: 0%;
 }
+
 .goop:nth-of-type(9) {
+  --goop-opacity: 0.8;
   top: 13%;
   left: 53%;
   background-color: var(--bug-guts-bronze-yellow);
-  opacity: 0.8;
+}
+
+
+.buttonBase:hover .goop {
+  animation: splat 0.2s ease-out forwards;
+}
+
+.buttonBase:hover .goop:nth-of-type(1) { animation-delay: 0s; }
+.buttonBase:hover .goop:nth-of-type(2) { animation-delay: 0.05s; }
+.buttonBase:hover .goop:nth-of-type(3) { animation-delay: 0.1s; }
+.buttonBase:hover .goop:nth-of-type(4) { animation-delay: 0.02s; }
+.buttonBase:hover .goop:nth-of-type(5) { animation-delay: 0.06s; }
+.buttonBase:hover .goop:nth-of-type(6) { animation-delay: 0.12s; }
+.buttonBase:hover .goop:nth-of-type(7) { animation-delay: 0.08s; }
+.buttonBase:hover .goop:nth-of-type(8) { animation-delay: 0.07s; }
+.buttonBase:hover .goop:nth-of-type(9) { animation-delay: 0.14s; }
+
+
+@keyframes splat {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: var(--goop-opacity);  /* ← Each goop uses its own opacity */
+    transform: scale(1);
+  }
 }

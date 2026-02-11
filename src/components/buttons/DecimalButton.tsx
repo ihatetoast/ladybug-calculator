@@ -14,9 +14,3 @@ const DecimalButton = ({onDecimalClick}: Props) => {
 }
 
 export default DecimalButton
-
-
-/**
- * simple dot. 
- * just red circle with black dot. 
- */
